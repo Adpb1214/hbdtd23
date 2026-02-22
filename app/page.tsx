@@ -684,7 +684,7 @@ export default function Home() {
             </p>
 
             {/* Age Display */}
-            {step === 'celebrate' && <AgeDisplay age={25} />}
+            {step === 'celebrate' && <AgeDisplay age={24} />}
 
             {/* Cake */}
             {(step === 'cake' || step === 'candles' || step === 'blow') && (
