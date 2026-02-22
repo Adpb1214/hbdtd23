@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Confetti from 'react-confetti';
 
 // Types
-type Step = 'welcome' | 'decorate' | 'cake' | 'candles' | 'blow' | 'celebrate';
+type Step = 'welcome' | 'decorate' | 'cake' | 'candles' | 'blow' | 'cut' | 'celebrate';
 
 // Smoke Particle Component
 const SmokeParticle = ({ delay, x }: { delay: number; x: number }) => (
@@ -304,11 +304,30 @@ const BirthdayCake = ({
   showCandles,
   candlesLit,
   isBlowing,
+  showKnife = false,
+  onCut,
 }: {
   showCandles: boolean;
   candlesLit: boolean;
   isBlowing: boolean;
+  showKnife?: boolean;
+  onCut?: () => void;
 }) => {
+  const [isCutting, setIsCutting] = useState(false);
+  const [isCut, setIsCut] = useState(false);
+  const [isHoveringKnife, setIsHoveringKnife] = useState(false);
+
+  const handleCut = () => {
+    if (!isCut) {
+      setIsCutting(true);
+      setTimeout(() => {
+        setIsCut(true);
+        setIsCutting(false);
+        if (onCut) onCut();
+      }, 1000);
+    }
+  };
+
   return (
     <motion.div
       initial={{ scale: 0, y: 100 }}
@@ -330,6 +349,53 @@ const BirthdayCake = ({
         </div>
       )}
 
+      {/* Knife - Positioned above the cake */}
+      {showKnife && !isCut && (
+        <motion.div
+          className="absolute -top-16 left-1/2 transform -translate-x-1/2 z-30 cursor-pointer"
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
+          onHoverStart={() => setIsHoveringKnife(true)}
+          onHoverEnd={() => setIsHoveringKnife(false)}
+          onClick={handleCut}
+        >
+          <motion.div
+            animate={isCutting ? {
+              rotate: [0, -30, 30, -20, 20, 0],
+              x: [0, -10, 10, -5, 5, 0],
+              y: [0, 10, -10, 5, -5, 0],
+            } : isHoveringKnife ? {
+              rotate: [-10, 10, -10],
+              scale: 1.1,
+            } : {}}
+            transition={isHoveringKnife ? { duration: 0.5, repeat: Infinity } : { duration: 1 }}
+            className="text-6xl sm:text-7xl transform -rotate-45"
+          >
+            🔪
+          </motion.div>
+          {/* Hint text */}
+          {isHoveringKnife && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 whitespace-nowrap bg-white/90 text-pink-600 px-4 py-2 rounded-full text-sm font-bold shadow-lg"
+            >
+              Click to cut the cake! ✨
+            </motion.div>
+          )}
+        </motion.div>
+      )}
+
+      {/* Cut line effect */}
+      {isCut && (
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent z-20"
+          style={{ transform: 'rotate(-15deg)' }}
+        />
+      )}
+
       <div className="relative flex flex-col items-center">
         <motion.div
           animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
@@ -340,7 +406,14 @@ const BirthdayCake = ({
         </motion.div>
 
         {/* Layer 1 */}
-        <motion.div className="relative z-10">
+        <motion.div 
+          className="relative z-10"
+          animate={isCut ? {
+            x: [-5, 5, -5],
+            rotate: [-2, 2, -2],
+          } : {}}
+          transition={{ duration: 0.5 }}
+        >
           <div className="w-28 sm:w-32 md:w-36 h-10 sm:h-12 md:h-14 bg-gradient-to-b from-pink-200 via-pink-400 to-pink-500 rounded-t-[2rem] rounded-b-lg shadow-lg relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-3 sm:h-4 bg-gradient-to-b from-pink-100 to-pink-200 rounded-t-[2rem]" />
             <div className="absolute bottom-0 left-2 w-3 h-4 bg-pink-200 rounded-b-full" />
@@ -355,7 +428,14 @@ const BirthdayCake = ({
         </motion.div>
 
         {/* Layer 2 */}
-        <motion.div className="relative z-5 -mt-2">
+        <motion.div 
+          className="relative z-5 -mt-2"
+          animate={isCut ? {
+            x: [5, -5, 5],
+            rotate: [2, -2, 2],
+          } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
           <div className="w-36 sm:w-44 md:w-48 h-12 sm:h-14 md:h-16 bg-gradient-to-b from-purple-200 via-purple-400 to-purple-500 rounded-lg shadow-lg relative overflow-hidden">
             <div className="absolute bottom-0 left-3 w-4 h-5 bg-purple-200 rounded-b-full" />
             <div className="absolute bottom-0 left-12 w-3 h-4 bg-purple-200 rounded-b-full" />
@@ -372,7 +452,14 @@ const BirthdayCake = ({
         </motion.div>
 
         {/* Layer 3 */}
-        <motion.div className="relative -mt-2">
+        <motion.div 
+          className="relative -mt-2"
+          animate={isCut ? {
+            x: [-8, 8, -8],
+            rotate: [-3, 3, -3],
+          } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <div className="w-48 sm:w-56 md:w-60 h-14 sm:h-16 md:h-20 bg-gradient-to-b from-amber-100 via-amber-300 to-amber-500 rounded-lg rounded-b-2xl shadow-xl relative overflow-hidden">
             <div className="absolute bottom-0 left-4 w-5 h-6 bg-amber-100 rounded-b-full" />
             <div className="absolute bottom-0 left-14 w-4 h-5 bg-amber-100 rounded-b-full" />
@@ -406,6 +493,16 @@ const BirthdayCake = ({
           />
         )}
       </div>
+
+      {isCut && (
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-4 text-2xl text-pink-600 font-bold"
+        >
+          🎂 Cake is cut! Time to celebrate! 🎉
+        </motion.p>
+      )}
     </motion.div>
   );
 };
@@ -487,6 +584,100 @@ const GiftBox = ({ delay, emoji }: { delay: number; emoji: string }) => (
   </motion.div>
 );
 
+// Letter Popup Component - Made wider
+const LetterPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const letterContent = `Abhi bhi kuch sabdh baki hai mere pass...
+
+So where should I start? From the day I really got to know you.
+
+I got to know a girl who is such a pure soul. You never hesitate to tell the truth, you never pretend, you show exactly who you are. Tui etota sweet je tui nijeo janis na! Koto kichur moddheo playful thaka, moja kora, choto choto jinishe moja khuje newa — ami tor thekei shikhechi.
+
+Tui onek onek kichu deserve koris. Shob bhalo tui deserve koris. Tui nije kotota bhalo, tui janis-i na. Tui jemon nijer beautiful eyes aar oi glowing smile ta ke jotota underestimate koris, thik temni je person tui, je meye tui — setakeo koris.
+
+Ami shob shomoy pray kori jeno tor ei koshto, ei wait ta shesh hoy. Ektu shanti pa. Aaj-o tor birthday te shei wish-i korbo, and always.
+
+Sharajibon emni korei tor thakumar tanaya, mayer tanai, babar ghutu buri hoye thak — hese khele, cinema dekhe, boi pore. Aar haan, Krish Kapoor ke bhalobese thak!
+
+And always know one thing — whatever happens, you're never alone. There's another Dutta standing with you, always.
+
+Happy Birthday, Tanushree. I wish you the very best for the whole year ahead.❤️🎂✨`;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-indigo-900/50 backdrop-blur-sm z-50"
+          />
+          
+          {/* Letter - Made wider */}
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0, y: 100 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.5, opacity: 0, y: 100 }}
+            transition={{ type: 'spring', bounce: 0.3 }}
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-11/12 max-w-4xl"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 relative border-8 border-pink-100 max-h-[80vh] overflow-y-auto">
+              {/* Decorative elements */}
+              <div className="absolute -top-3 -right-3 text-4xl">💌</div>
+              <div className="absolute -bottom-3 -left-3 text-4xl">✨</div>
+              
+              {/* Letter content */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-center"
+                >
+                  <span className="text-5xl sm:text-6xl inline-block transform rotate-[-5deg]">📜</span>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="font-handwriting text-pink-900 text-lg sm:text-xl md:text-2xl leading-relaxed whitespace-pre-line text-center sm:text-left"
+                  style={{ fontFamily: "'Comic Sans MS', 'cursive', 'Bradley Hand', 'cursive'" }}
+                >
+                  {letterContent}
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex justify-center gap-2 text-3xl"
+                >
+                  <span>❤️</span>
+                  <span>💖</span>
+                  <span>💕</span>
+                </motion.div>
+              </div>
+              
+              {/* Close button */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onClose}
+                className="absolute -top-4 -right-4 bg-pink-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-pink-600 transition-colors"
+              >
+                ×
+              </motion.button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 // Main Component
 export default function Home() {
   const [step, setStep] = useState<Step>('welcome');
@@ -495,6 +686,9 @@ export default function Home() {
   const [isBlowing, setIsBlowing] = useState(false);
   const [showWind, setShowWind] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [showLetter, setShowLetter] = useState(false);
+  const [cakeCut, setCakeCut] = useState(false);
+  const [isHoveringLetterButton, setIsHoveringLetterButton] = useState(false);
 
   const balloonColors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCB77', '#FF9F1C', '#9B59B6', '#3498DB', '#E91E63'];
   const fireworkColors = ['#FF6B6B', '#FFD93D', '#4ECDC4', '#9B59B6', '#FF9F1C', '#E91E63'];
@@ -515,18 +709,25 @@ export default function Home() {
     setTimeout(() => setShowWind(false), 600);
     
     setTimeout(() => {
-      setStep('celebrate');
-      setShowConfetti(true);
-      setShowFireworks(true);
+      setStep('cut');
       setIsBlowing(false);
-      
-      setTimeout(() => setShowFireworks(false), 3000);
-      setTimeout(() => setShowConfetti(false), 12000);
     }, 1000);
   }, []);
 
+  const handleCut = () => {
+    setCakeCut(true);
+    setTimeout(() => {
+      setStep('celebrate');
+      setShowConfetti(true);
+      setShowFireworks(true);
+      
+      setTimeout(() => setShowFireworks(false), 3000);
+      setTimeout(() => setShowConfetti(false), 12000);
+    }, 1500);
+  };
+
   const nextStep = useCallback(() => {
-    const steps: Step[] = ['welcome', 'decorate', 'cake', 'candles', 'blow', 'celebrate'];
+    const steps: Step[] = ['welcome', 'decorate', 'cake', 'candles', 'blow', 'cut', 'celebrate'];
     const currentIndex = steps.indexOf(step);
     
     if (step === 'blow') {
@@ -545,6 +746,8 @@ export default function Home() {
     setShowWind(false);
     setShowConfetti(false);
     setShowFireworks(false);
+    setShowLetter(false);
+    setCakeCut(false);
   };
 
   const stepConfig = {
@@ -578,6 +781,12 @@ export default function Home() {
       buttonText: "🌬️ BLOW! 🌬️",
       gradient: "from-pink-500 via-rose-500 to-red-500",
     },
+    cut: {
+      title: "🔪 Time to Cut the Cake!",
+      subtitle: "Click the knife to make the first cut!",
+      buttonText: cakeCut ? "✨ Continue to Celebration ✨" : "",
+      gradient: "from-purple-500 via-pink-500 to-red-500",
+    },
     celebrate: {
       title: "🎉 HAPPY BIRTHDAY TANUSHREE! 🎉",
       subtitle: "May all your wishes come true! 🌟",
@@ -589,7 +798,7 @@ export default function Home() {
   const currentConfig = stepConfig[step];
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+    <main className={`min-h-screen relative overflow-hidden bg-gradient-to-br ${currentConfig.gradient}`}>
       {/* Confetti */}
       {showConfetti && windowSize.width > 0 && (
         <Confetti
@@ -615,6 +824,9 @@ export default function Home() {
 
       {/* Wind Effect */}
       {showWind && <WindEffect />}
+
+      {/* Letter Popup */}
+      <LetterPopup isOpen={showLetter} onClose={() => setShowLetter(false)} />
 
       {/* Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -687,12 +899,14 @@ export default function Home() {
             {step === 'celebrate' && <AgeDisplay age={24} />}
 
             {/* Cake */}
-            {(step === 'cake' || step === 'candles' || step === 'blow') && (
+            {(step === 'cake' || step === 'candles' || step === 'blow' || step === 'cut') && (
               <div className="my-8 flex justify-center w-full">
                 <BirthdayCake
                   showCandles={step === 'candles' || step === 'blow'}
                   candlesLit={step === 'candles' || step === 'blow'}
                   isBlowing={isBlowing}
+                  showKnife={step === 'cut' && !cakeCut}
+                  onCut={handleCut}
                 />
               </div>
             )}
@@ -738,6 +952,46 @@ export default function Home() {
                 
                 {/* Wishes */}
                 <BirthdayWishes />
+
+                {/* Special Letter Button - Highlighted */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onHoverStart={() => setIsHoveringLetterButton(true)}
+                  onHoverEnd={() => setIsHoveringLetterButton(false)}
+                  onClick={() => setShowLetter(true)}
+                  className={`
+                    mt-6 
+                    text-white 
+                    text-xl sm:text-2xl 
+                    px-8 py-4 
+                    rounded-full 
+                    font-bold 
+                    shadow-2xl 
+                    transition-all 
+                    flex items-center gap-3
+                    border-4 border-white
+                    ${isHoveringLetterButton 
+                      ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 scale-105' 
+                      : 'bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400'}
+                  `}
+                >
+                  <span className="text-2xl animate-bounce">💌</span>
+                  <span className="relative">
+                    Abhi bhi kuch shabd baaki hai...
+                    <motion.span
+                      animate={{ opacity: [0, 1, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="absolute -right-6 -top-2 text-2xl"
+                    >
+                      ✨
+                    </motion.span>
+                  </span>
+                  <span className="text-2xl animate-pulse">💕</span>
+                </motion.button>
               </motion.div>
             )}
 
@@ -805,41 +1059,12 @@ export default function Home() {
                 />
               </motion.button>
             )}
-
-            {/* Restart Button */}
-            {step === 'celebrate' && (
-              <motion.button
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5 }}
-                whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255,255,255,0.3)' }}
-                whileTap={{ scale: 0.95 }}
-                onClick={resetCelebration}
-                className="
-                  mt-10
-                  bg-gradient-to-r from-white/20 to-white/10
-                  backdrop-blur-sm
-                  text-white
-                  text-lg sm:text-xl md:text-2xl
-                  px-10 sm:px-12 md:px-14
-                  py-4 sm:py-5 md:py-6
-                  rounded-full
-                  font-bold
-                  hover:from-white/30 hover:to-white/20
-                  transition-all
-                  border-2 border-white/40
-                  shadow-xl
-                "
-              >
-                ✨ Celebrate Again! 🔄
-              </motion.button>
-            )}
           </motion.div>
         </AnimatePresence>
 
         {/* Step Indicators */}
         <div className="fixed bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 z-30">
-          {(['welcome', 'decorate', 'cake', 'candles', 'blow', 'celebrate'] as Step[]).map((s) => (
+          {(['welcome', 'decorate', 'cake', 'candles', 'blow', 'cut', 'celebrate'] as Step[]).map((s) => (
             <motion.div
               key={s}
               className={`h-2 sm:h-3 md:h-4 rounded-full transition-all duration-300 ${
