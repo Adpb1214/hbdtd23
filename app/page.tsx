@@ -592,7 +592,7 @@ So where should I start? From the day I really got to know you.
 
 I got to know a girl who is such a pure soul. You never hesitate to tell the truth, you never pretend, you show exactly who you are. Tui etota sweet je tui nijeo janis na! Koto kichur moddheo playful thaka, moja kora, choto choto jinishe moja khuje newa — ami tor thekei shikhechi.
 
-Tui onek onek kichu deserve koris. Shob bhalo tui deserve koris. Tui nije kotota bhalo, tui janis-i na. Tui jemon nijer beautiful eyes aar oi glowing smile ta ke jotota underestimate koris, thik temni je person tui, je meye tui — setakeo koris.
+Tui onek onek kichu deserve koris. Shob bhalo tui deserve koris. Tui nije kotota bhalo, tui janis-i na. Tui jemon nijer beautiful eyes aar oi glowing smile ta ke jotota underestimate koris, thik temni je person tui, je manush tui — setakeo koris.
 
 Ami shob shomoy pray kori jeno tor ei koshto, ei wait ta shesh hoy. Ektu shanti pa. Aaj-o tor birthday te shei wish-i korbo, and always.
 
@@ -752,7 +752,7 @@ export default function Home() {
 
   const stepConfig = {
     welcome: {
-      title: "🎉 A Special Celebration Awaits!",
+      title: "🎉 Tahole Rat 12 tai Celebration ta suru kori!",
       subtitle: "Someone very special has a birthday today...",
       buttonText: "Let's Celebrate! 🎊",
       gradient: "from-purple-600 via-pink-500 to-rose-500",
@@ -760,7 +760,7 @@ export default function Home() {
     decorate: {
       title: "🎈 Let's Decorate!",
       subtitle: "The room is getting ready for the party",
-      buttonText: "Bring the Cake! 🎂",
+      buttonText: "Cake ta ani ebaar? 🎂",
       gradient: "from-blue-500 via-cyan-500 to-teal-500",
     },
     cake: {
@@ -770,19 +770,19 @@ export default function Home() {
       gradient: "from-amber-500 via-orange-500 to-red-500",
     },
     candles: {
-      title: "🕯️ Make a Wish!",
+      title: "🕯️ Make a Wish Ms.Dutta!",
       subtitle: "Close your eyes and make a special wish...",
-      buttonText: "Ready to Blow! 💨",
+      buttonText: "Joree Fuu Deee! 💨",
       gradient: "from-yellow-500 via-orange-500 to-red-500",
     },
     blow: {
       title: "💨 Take a Deep Breath...",
-      subtitle: "Ready? Blow out all the candles!",
+      subtitle: "Hocchena!Aro jore Fuu Deeeee!",
       buttonText: "🌬️ BLOW! 🌬️",
       gradient: "from-pink-500 via-rose-500 to-red-500",
     },
     cut: {
-      title: "🔪 Time to Cut the Cake!",
+      title: "🔪 Cake ta Kat Ebar(Dough as you like thekei anlam)!",
       subtitle: "Click the knife to make the first cut!",
       buttonText: cakeCut ? "✨ Continue to Celebration ✨" : "",
       gradient: "from-purple-500 via-pink-500 to-red-500",
