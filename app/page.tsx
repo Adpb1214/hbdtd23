@@ -663,7 +663,7 @@ Happy Birthday, Tanushree. I wish you the very best for the whole year ahead.❤
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="absolute -top-4 -right-4 bg-pink-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-pink-600 transition-colors"
+                className="absolute -top-4 -right-4 bg-pink-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-pink-600 transition-colors mt-4 p-4"
               >
                 ×
               </motion.button>
