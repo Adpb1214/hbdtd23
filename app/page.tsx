@@ -655,9 +655,6 @@ Happy Birthday, Tanushree. I wish you the very best for the whole year ahead.❤
                   transition={{ delay: 0.5 }}
                   className="flex justify-center gap-2 text-3xl"
                 >
-                  <span>❤️</span>
-                  <span>💖</span>
-                  <span>💕</span>
                 </motion.div>
               </div>
               
